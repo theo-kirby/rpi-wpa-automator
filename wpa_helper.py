@@ -1,4 +1,5 @@
 import os, getpass
+import sys, getopt
 
 ssid = ''
 pswd = ''
@@ -31,14 +32,39 @@ def getParams():
     global ssid
     global pswd
 
-    ssid = input("\n SSID : ")               #  Wifi Network Name
-    pswd = getpass.getpass("\n PSWD : ")     #  Wifi Network Password
+    #ssid = input("\n SSID : ")               #  Wifi Network Name
+    #pswd = getpass.getpass("\n PSWD : ")     #  Wifi Network Password
     
-   
-
-getParams()
-
-mkFiles(ssid, pswd)
-
-#os.system('cp wpa_supplicant.conf ssh /Volumes/boot or /path/to/sd card boot')
+  
+  
+def main(argv):
+       
+   try:
+      opts, args = getopt.getopt(argv,"n:p:",["nname=","npass="])
+      
+   except getopt.GetoptError:
+      print('wpa_helper.py -n <Network Name> -p <Network Password>')
+      sys.exit(2)
+      
+   for opt, arg in opts:
+       
+      if opt == '-h':
+         print('wpa_helper.py -n <Network Name> -p <Network Password>')
+         sys.exit()
+         
+      elif opt in ("-n", "--Network Name"):
+          global ssid
+          ssid = arg
+         
+      elif opt in ("-p", "--Network Password"):
+        global pswd
+        pswd = arg
+         
+if __name__ == "__main__":
+    
+    main(sys.argv[1:])
+    getParams()
+    mkFiles(ssid, pswd)
+    
+#os.system('cp wpa_supplicant.conf ssh /Volumes/boot')
 
